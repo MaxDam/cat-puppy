@@ -1,10 +1,10 @@
 {
-    "name": "Cat-Puppy",
+    "name": "Cat Puppy",
     "version": "0.0.1",
-    "description": "Description of cat-puppy.",
-    "author_name": "Me",
-    "author_url": "https://mywebsite.me",
-    "plugin_url": "https://github.com/my_name/cat-puppy",
+    "description": "The cat has a puppy that sometimes answers for him... but it's a baby llama",
+    "author_name": "Massimiliano D'Amico",
+    "author_url": "https://www.linkedin.com/in/massimilianodamico",
+    "plugin_url": "https://github.com/MaxDam/cat-puppy",
     "tags": "cat, template, example",
-    "thumb": "https://github.com/MaxDam/cat-puppy/logo/logo1.jpg"
+    "thumb": "https://maxdam.github.io/cat-puppy/logo/logo1.jpg"
 }

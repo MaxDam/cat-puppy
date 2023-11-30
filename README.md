@@ -1,4 +1,4 @@
-# Cat-Puppy
+# Cat Puppy
 
 <img src="./logo/logo1.jpg" width=600>
 
