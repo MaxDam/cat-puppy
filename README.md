@@ -1,6 +1,8 @@
 # Cat Puppy
+The cat has a puppy that sometimes answers for him... but it's a baby llama
 
-<img src="./logo/logo1.jpg" width=600>
+<img src="./img/thumb.jpg" width=600>
+<br><br>
 
 [![awesome plugin](https://custom-icon-badges.demolab.com/static/v1?label=&message=awesome+plugin&color=383938&style=for-the-badge&logo=cheshire_cat_ai)](https://)  
 [![Awesome plugin](https://custom-icon-badges.demolab.com/static/v1?label=&message=Awesome+plugin&color=000000&style=for-the-badge&logo=cheshire_cat_ai)](https://)  
