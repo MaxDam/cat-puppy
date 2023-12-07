@@ -34,7 +34,7 @@ def agent_prompt_prefix(prefix, cat) -> str:
 def after_cat_bootstrap(cat):
     
     # Get settings
-    settings = cat.mad_hatter.plugins["my_plugin_name"].load_settings()
+    settings = cat.mad_hatter.get_plugin().load_settings()
 
     # initialize puppy llm and save it into working memory
     try:
