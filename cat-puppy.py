@@ -1,6 +1,6 @@
 from typing import Dict
 
-from puppy.puppy import Puppy
+from .puppy import Puppy
 
 from cat.log import log
 from cat.mad_hatter.decorators import tool, hook, plugin

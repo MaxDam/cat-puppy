@@ -3,7 +3,6 @@ import time
 
 from langchain.llms import Ollama
 
-from cat.log import log
 from cat.looking_glass.callbacks import NewTokenHandler
 from cat.looking_glass.prompts import MAIN_PROMPT_PREFIX, MAIN_PROMPT_SUFFIX
 
