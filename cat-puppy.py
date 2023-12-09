@@ -80,10 +80,17 @@ def agent_fast_reply(fast_reply, cat) -> Dict:
 
 # Return puppy llm
 def get_puppy(cat):
-    # load puppy llm only fist time
+    # load puppy llm if not loaded
     if "puppy_llm" not in cat.working_memory.keys():
         log.warning(f"Load putty llm.. ")
         puppy = Puppy(cat)
         cat.working_memory["puppy_llm"] = puppy
+    else: # if loaded, check if settings changed
+        puppy = cat.working_memory["puppy_llm"]
+        settings = cat.mad_hatter.get_plugin().load_settings()
+        if puppy.settings != settings:
+            log.warning(f"Reload putty llm.. ")
+            puppy = Puppy(cat)
+            cat.working_memory["puppy_llm"] = puppy
 
-    return cat.working_memory["puppy_llm"]
+    return puppy
