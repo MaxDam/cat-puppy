@@ -1,40 +1,9 @@
-from cat.mad_hatter.decorators import tool, hook, plugin
-from pydantic import BaseModel, Field
 from typing import Dict
+
+from puppy.puppy import Puppy
+
 from cat.log import log
-from .puppy import Puppy
-
-
-class MySettings(BaseModel):
-    base_url: str = Field(
-        title="base url",
-        default="http://host.docker.internal:11434"
-    )
-    model: str = Field(
-        title="model",
-        default="zephyr:7b-beta"  #openchat
-    )
-    num_ctx: int = Field(
-        title="num ctx",
-        default=2048
-    )
-    repeat_last_n: int = Field(
-        title="repeat last n",
-        default=64
-    )
-    repeat_penalty: float = Field(
-        title="repeat penalty",
-        default=1.1
-    )
-    temperature: float = Field(
-        title="temperature",
-        default=0.1
-    )
-
-
-@plugin
-def settings_schema():   
-    return MySettings.schema()
+from cat.mad_hatter.decorators import tool, hook, plugin
 
 
 @plugin
@@ -57,12 +26,10 @@ def after_cat_bootstrap(cat):
 
 @hook()
 def agent_fast_reply(fast_reply, cat) -> Dict:
-    
     # If the cat doesn't call any tools, call puppy
-    num_procedural_mems = len( cat.working_memory["procedural_memories"] )
+    num_procedural_mems = len(cat.working_memory["procedural_memories"])
     log.warning(f"Number procedural memories: {num_procedural_mems}")
     if num_procedural_mems == 0:
-
         # Get puppy
         puppy = get_puppy(cat)
 
@@ -73,8 +40,8 @@ def agent_fast_reply(fast_reply, cat) -> Dict:
         log.warning(f"Calling puppy llm: {user_message}")
         response = puppy.llm(user_message, stream=True)
         log.warning(f"received response in: {puppy.last_response_time}")
-        return { "output": response } 
-    
+        return {"output": response}
+
     return fast_reply
 
 
@@ -85,7 +52,7 @@ def get_puppy(cat):
         log.warning(f"Load putty llm.. ")
         puppy = Puppy(cat)
         cat.working_memory["puppy_llm"] = puppy
-    else: # if loaded, check if settings changed
+    else:  # if loaded, check if settings changed
         puppy = cat.working_memory["puppy_llm"]
         settings = cat.mad_hatter.get_plugin().load_settings()
         if puppy.settings != settings:
