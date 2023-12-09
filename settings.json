@@ -1,0 +1,8 @@
+{
+  "base_url": "http://host.docker.internal:11434",
+  "model": "zephyr:7b-beta",
+  "num_ctx": 2048,
+  "repeat_last_n": 64,
+  "repeat_penalty": 1.1,
+  "temperature": 0.1
+}
