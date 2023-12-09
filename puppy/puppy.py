@@ -1,10 +1,12 @@
+import copy
+import time
+
 from langchain.llms import Ollama
+
 from cat.log import log
 from cat.looking_glass.callbacks import NewTokenHandler
 from cat.looking_glass.prompts import MAIN_PROMPT_PREFIX, MAIN_PROMPT_SUFFIX
 
-import copy
-import time
 
 class Puppy:
 
@@ -22,8 +24,7 @@ class Puppy:
 
         self.puppy_llm = Ollama(**llm_settings)
 
-
-    # Invoke puppy LLM 
+    # Invoke puppy LLM
     def llm(self, prompt: str, stream: bool = False) -> str:
         
         # Obtain the prompt with context
@@ -41,7 +42,6 @@ class Puppy:
         self.last_response_time = time.time() - start_time
 
         return response
-
 
     # Get full prompt with context
     def _get_full_prompt(self, prompt: str):
