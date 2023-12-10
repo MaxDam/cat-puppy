@@ -26,13 +26,16 @@ def agent_fast_reply(fast_reply, cat) -> Dict:
     # Get puppy
     puppy = get_puppy(cat)
     
-    # Invoke cat puppy hook
+    # Invoke cat puppy hook "set cat puppy"
     try:
         cat.mad_hatter.execute_hook("set_cat_puppy", puppy, cat=cat)
     except Exception as e:
         log.warning(f"{e}")
     
-    # If use puppy by default
+    '''
+    if the use_by_default property is true the component 
+    decide when to use the llm puppy
+    ''' 
     if puppy.settings["use_by_default"] is True:
         use_puppy = True
         
@@ -60,6 +63,23 @@ def agent_fast_reply(fast_reply, cat) -> Dict:
             log.warning(f"received response in: {puppy.last_response_time}")
             return {"output": response}
 
+    '''
+    if the use_by_default property is false you can implement a hook called use_cat_puppy 
+    where you can decide whether or not to use the llm puppy
+    '''  
+    if puppy.settings["use_by_default"] is False:
+        try:
+            use_puppy = cat.mad_hatter.execute_hook("use_cat_puppy", puppy, cat=cat)
+            if use_puppy is True:
+                log.warning(f"Calling puppy llm")
+                user_message = puppy.cat.working_memory["user_message_json"]["text"]
+                response = puppy.llm(user_message, stream=True)
+                log.warning(f"received response in: {puppy.last_response_time}")
+                return {"output": response}
+        except Exception as e:
+            log.warning(f"{e}")
+
+
     return fast_reply
 
 
@@ -79,3 +99,17 @@ def get_puppy(cat):
             cat.working_memory["puppy_llm"] = puppy
 
     return puppy
+
+
+
+
+################# CAT PUPPY HOOKS #################
+
+@hook()
+def set_cat_puppy(prefix, puppy, cat):
+    pass
+
+
+@hook()
+def use_cat_puppy(prefix, puppy, cat):
+    return False
