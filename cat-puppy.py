@@ -1,40 +1,9 @@
-from cat.mad_hatter.decorators import tool, hook, plugin
-from pydantic import BaseModel, Field
 from typing import Dict
-from cat.log import log
+
 from .puppy import Puppy
 
-
-class MySettings(BaseModel):
-    base_url: str = Field(
-        title="base url",
-        default="http://host.docker.internal:11434"
-    )
-    model: str = Field(
-        title="model",
-        default="zephyr:7b-beta"  #openchat
-    )
-    num_ctx: int = Field(
-        title="num ctx",
-        default=2048
-    )
-    repeat_last_n: int = Field(
-        title="repeat last n",
-        default=64
-    )
-    repeat_penalty: float = Field(
-        title="repeat penalty",
-        default=1.1
-    )
-    temperature: float = Field(
-        title="temperature",
-        default=0.1
-    )
-
-
-@plugin
-def settings_schema():   
-    return MySettings.schema()
+from cat.log import log
+from cat.mad_hatter.decorators import tool, hook, plugin
 
 
 @plugin
@@ -46,35 +15,51 @@ def activate(plugin):
 # Hook the main prompt prefix
 @hook()
 def agent_prompt_prefix(prefix, cat) -> str:
+    if "puppy_llm" in cat.working_memory.keys():
+        puppy = cat.working_memory["puppy_llm"]
+        prefix = puppy.settings["puppy_prompt"]
     return prefix
-
-
-# Called after cat bootstrap
-@hook()
-def after_cat_bootstrap(cat):
-    del cat.working_memory["puppy_llm"]
 
 
 @hook()
 def agent_fast_reply(fast_reply, cat) -> Dict:
+    # Get puppy
+    puppy = get_puppy(cat)
     
-    # If the cat doesn't call any tools, call puppy
-    num_procedural_mems = len( cat.working_memory["procedural_memories"] )
-    log.warning(f"Number procedural memories: {num_procedural_mems}")
-    if num_procedural_mems == 0:
-
-        # Get puppy
-        puppy = get_puppy(cat)
+    # Invoke cat puppy hook
+    try:
+        cat.mad_hatter.execute_hook("set_cat_puppy", puppy, cat=cat)
+    except Exception as e:
+        log.warning(f"{e}")
+    
+    # If use puppy by default
+    if puppy.settings["use_by_default"] is True:
+        use_puppy = True
+        
+        # Check if tool is called
+        num_procedural_mems = len(cat.working_memory["procedural_memories"])
+        log.warning(f"Number procedural memories: {num_procedural_mems}")
+        if num_procedural_mems > 0:
+            if puppy.settings["use_for_start_tools"] is False:
+                log.warning(f"don't use puppy because tools are called")
+                use_puppy = False
 
         # Get user message
-        user_message = cat.working_memory["user_message_json"]["text"]
+        user_message = puppy.cat.working_memory["user_message_json"]["text"]
 
-        # Call puppy llm
-        log.warning(f"Calling puppy llm: {user_message}")
-        response = puppy.llm(user_message, stream=True)
-        log.warning(f"received response in: {puppy.last_response_time}")
-        return { "output": response } 
-    
+        # Check sentence length
+        if len(user_message) > puppy.settings["sentence_max_length"]:
+            if puppy.settings["use_for_large_sentences"] is False:
+                log.warning(f"don't use puppy because the sentence are too logn")
+                use_puppy = False
+
+        # If use puppy -> Call puppy llm
+        if use_puppy is True:    
+            log.warning(f"Calling puppy llm")
+            response = puppy.llm(user_message, stream=True)
+            log.warning(f"received response in: {puppy.last_response_time}")
+            return {"output": response}
+
     return fast_reply
 
 
@@ -85,7 +70,7 @@ def get_puppy(cat):
         log.warning(f"Load putty llm.. ")
         puppy = Puppy(cat)
         cat.working_memory["puppy_llm"] = puppy
-    else: # if loaded, check if settings changed
+    else:  # if loaded, check if settings changed
         puppy = cat.working_memory["puppy_llm"]
         settings = cat.mad_hatter.get_plugin().load_settings()
         if puppy.settings != settings:

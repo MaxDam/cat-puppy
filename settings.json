@@ -1,0 +1,13 @@
+{
+    "base_url": "http://host.docker.internal:11434",
+    "model": "zephyr:7b-beta",
+    "num_ctx": 2048,
+    "repeat_last_n": 64,
+    "repeat_penalty": 1.1,
+    "temperature": 0.1,
+    "use_by_default": true,
+    "use_for_start_tools": false,
+    "sentence_max_length": 500,
+    "use_for_large_sentences": false,
+    "puppy_prompt": "You are the Cheshire Cat's puppy, an intelligent artificial intelligence that runs locally on the user's PC. Answer to the Human using very short and precise sentences, focusing on the following context."
+}
