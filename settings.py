@@ -29,7 +29,7 @@ class MySettings(BaseModel):
     )
     puppy_prompt: str = Field(
         title="Puppy prompt",
-        default="""You are the Cheshire Cat's puppy, an intelligent artificial intelligence that runs locally on the user's PC. Answer to the Human using very short and precise sentences, focusing on the following context.""",
+        default="""You are the Cheshire Cat's pet, an intelligent artificial intelligence that runs locally on the user's PC. Respond to the Human using very short, precise sentences, focusing on the subsequent context. Just reply without reporting the entire previous conversation.""",
         extra={"type": "TextArea"}
     )
     use_by_default: bool = Field(
