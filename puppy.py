@@ -13,22 +13,20 @@ class Puppy:
         self.cat = cat
         self.last_response_time = 0
 
-        # Get all settings
+        # Acquire all settings
         self.settings = cat.mad_hatter.get_plugin().load_settings()
         
-        # Get only setting for llm puppy
-        llm_settings = copy.copy(self.settings)
-        if "streaming" in llm_settings:
-            del llm_settings["streaming"]
+        # Initializa local LLM
+        llm_config = self._get_llm_config()
+        self.puppy_llm = Ollama(**llm_config)
 
-        self.puppy_llm = Ollama(**llm_settings)
 
     # Invoke puppy LLM
     def llm(self, prompt: str, stream: bool = False) -> str:
         
         # Obtain the prompt with context
         prompt = self._get_full_prompt(prompt)
-        print("prompt:\n{prompt}")
+        print(f"prompt:\n{prompt}")
 
         # Get Callback for streaming
         callbacks = []
@@ -42,6 +40,7 @@ class Puppy:
 
         return response
 
+
     # Get full prompt with context
     def _get_full_prompt(self, prompt: str):
         prompt_prefix = self.cat.mad_hatter.execute_hook("agent_prompt_prefix", MAIN_PROMPT_PREFIX, cat=self.cat)
@@ -51,3 +50,13 @@ class Puppy:
         prompt_suffix = MAIN_PROMPT_SUFFIX.format(**json_context)
         prompt = prompt_prefix + "\n" + prompt_suffix
         return prompt
+
+    # Get only setting for initialize llm puppy
+    def _get_llm_config(self):
+        llm_config = copy.copy(self.settings)
+        del llm_config["puppy_prompt"]
+        del llm_config["use_by_default"]
+        del llm_config["use_for_start_tools"]
+        del llm_config["sentence_max_length"]
+        del llm_config["use_for_large_sentences"]
+        return llm_config
