@@ -1,4 +1,6 @@
+from typing import Optional
 from pydantic import BaseModel, Field
+
 from cat.mad_hatter.decorators import plugin
 
 
@@ -29,7 +31,10 @@ class MySettings(BaseModel):
     )
     puppy_prompt: str = Field(
         title="Puppy prompt",
-        default="""You are the Cheshire Cat's pet, an intelligent artificial intelligence that runs locally on the user's PC. Respond to the Human using very short, precise sentences, focusing on the subsequent context. Just reply without reporting the entire previous conversation.""",
+        default=("You are the Cheshire Cat's pet," +
+                 "an intelligent artificial intelligence that runs locally on the user's PC. " +
+                 "Respond to the Human using very short, precise sentences, focusing on the subsequent context. " +
+                 "Just reply without reporting the entire previous conversation."),
         extra={"type": "TextArea"}
     )
     use_by_default: bool = Field(
@@ -40,13 +45,9 @@ class MySettings(BaseModel):
         title="use for start tools",
         default=False
     )
-    sentence_max_length: float = Field(
+    sentence_max_length: Optional[int] = Field(
         title="sentence max length",
-        default=500
-    )
-    use_for_large_sentences: bool = Field(
-        title="use for large sentences",
-        default=False
+        default=None
     )
 
 

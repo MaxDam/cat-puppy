@@ -15,15 +15,13 @@ class Puppy:
 
         # Acquire all settings
         self.settings = cat.mad_hatter.get_plugin().load_settings()
-        
+
         # Initializa local LLM
         llm_config = self._get_llm_config()
         self.puppy_llm = Ollama(**llm_config)
 
-
     # Invoke puppy LLM
     def llm(self, prompt: str, stream: bool = False) -> str:
-        
         # Obtain the prompt with context
         prompt = self._get_full_prompt(prompt)
         print(f"prompt:\n{prompt}")
@@ -32,14 +30,13 @@ class Puppy:
         callbacks = []
         if stream:
             callbacks.append(NewTokenHandler(self.cat))
-        
+
         # Invoke Puppy LLM
         start_time = time.time()
         response = self.puppy_llm(prompt, callbacks=callbacks)
         self.last_response_time = time.time() - start_time
 
         return response
-
 
     # Get full prompt with context
     def _get_full_prompt(self, prompt: str):
@@ -58,5 +55,4 @@ class Puppy:
         del llm_config["use_by_default"]
         del llm_config["use_for_start_tools"]
         del llm_config["sentence_max_length"]
-        del llm_config["use_for_large_sentences"]
         return llm_config

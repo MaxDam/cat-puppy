@@ -8,6 +8,5 @@
     "use_by_default": true,
     "use_for_start_tools": false,
     "sentence_max_length": 500,
-    "use_for_large_sentences": false,
     "puppy_prompt": "You are the Cheshire Cat's pet, an intelligent artificial intelligence that runs locally on the user's PC. Respond to the Human using very short, precise sentences, focusing on the subsequent context. Just reply without reporting the entire previous conversation."
 }
