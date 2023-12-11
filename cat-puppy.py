@@ -114,6 +114,7 @@ def get_puppy(cat):
 
 ################# CAT PUPPY HOOKS #################
 
+'''
 @hook()
 def set_cat_puppy(puppy, cat):
     puppy
@@ -122,3 +123,4 @@ def set_cat_puppy(puppy, cat):
 @hook()
 def use_cat_puppy(puppy, cat):
     return False
+'''

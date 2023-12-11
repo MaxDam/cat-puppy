@@ -1,3 +1,4 @@
+
 # Cat Puppy
 The cat has a puppy that sometimes answers for him... but it's a baby llama
 
@@ -5,26 +6,33 @@ The cat has a puppy that sometimes answers for him... but it's a baby llama
 <br><br>
 
 [![awesome plugin](https://custom-icon-badges.demolab.com/static/v1?label=&message=awesome+plugin&color=383938&style=for-the-badge&logo=cheshire_cat_ai)](https://)  
-[![Awesome plugin](https://custom-icon-badges.demolab.com/static/v1?label=&message=Awesome+plugin&color=000000&style=for-the-badge&logo=cheshire_cat_ai)](https://)  
-[![awesome plugin](https://custom-icon-badges.demolab.com/static/v1?label=&message=awesome+plugin&color=F4F4F5&style=for-the-badge&logo=cheshire_cat_black)](https://)
 
-Write here all the useful information about your plugin.
+## Settings
 
-This repository is the template to automate the release of official Cheshire Cat AI plugins. 
+- **base_url**: url to call ollama
+- **use_by_default**:  if set to true you want to automatically manage the engagement of the puppy model, if set to false the engagement of the puppy model is managed by external plugins via hooks
+- **use_for_start_tools**: if set to true you want to use the puppy model also to call the tools (not a recommended option given that the local model typically has greater difficulty in correctly undertaking these actions)
+- **sentence_max_length**: maximum number of words in a sentence to use the puppy model, beyond which the main model must be recalled
+- **puppy_prompt**: this is the prompt attributed to the puppy model
 
-## Usage
+## Usage by external plugins 
 
-1. Create a new repository clicking on the `Use this template` button.
-2. Clone your new repo directly in the Cat's `plugins` folder.
-3. Run the `setup.py` script:
-```bash
-python setup.py
-```
-The script will prompt you to write the name of your plugin and make an initial setup setting the name in the files.
+<pre><code>
+'''
+This hook is used to acquire the puppy model 
+from an external plugin
+'''
+@hook()
+def set_cat_puppy(puppy, cat):
+    puppy
+</code></pre>
 
-4. Start developing!
-
-> **Important**
-> A new release of your plugin is triggered every time you set a new `version` in the `plugin.json` file.
-> Please, remember to set it correctly every time to want to release an update.
-
+<pre><code>
+'''
+This hook is used to decide, by an external plugin, 
+when to involve the puppy model
+'''
+@hook()
+def use_cat_puppy(puppy, cat):
+    return False
+</code></pre>
