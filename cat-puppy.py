@@ -28,9 +28,10 @@ def agent_fast_reply(fast_reply, cat) -> Dict:
 
     # Invoke cat puppy hook "set cat puppy"
     try:
-        cat.mad_hatter.execute_hook("set_cat_puppy", puppy, cat=cat)
+        puppy = cat.mad_hatter.execute_hook("set_cat_puppy", puppy, cat=cat)
     except Exception as e:
         log.warning(f"{e}")
+        pass
 
     '''
     if the use_by_default property is true the component 
@@ -66,6 +67,7 @@ def agent_fast_reply(fast_reply, cat) -> Dict:
                 return {"output": response}
         except Exception as e:
             log.warning(f"{e}")
+            pass
 
     return fast_reply
 
@@ -113,10 +115,10 @@ def get_puppy(cat):
 ################# CAT PUPPY HOOKS #################
 
 @hook()
-def set_cat_puppy(prefix, puppy, cat):
-    pass
+def set_cat_puppy(puppy, cat):
+    puppy
 
 
 @hook()
-def use_cat_puppy(prefix, puppy, cat):
+def use_cat_puppy(puppy, cat):
     return False
